@@ -1,0 +1,55 @@
+.navbar {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+html {
+	padding-bottom: 50px;
+}
+
+pre {
+	tab-size: 4;
+	-moz-tab-size: 4;
+	background-color: rgb(245, 245, 245);
+	padding: 10px;
+}
+
+.langList {
+	margin-bottom: 5px;
+}
+
+.addSection {
+	margin-top: 15px;
+}
+
+.snippetBody {
+	font-family: monospace;
+}
+
+.requiredField {
+	color: red;
+}
+
+#successAlert {
+	display: none;
+}
+
+.card-header {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+.langSelect {
+	width: 100%;
+}
+
+#tablesImg {
+	width: 100%;
+}
+
+.resultsContainer {
+	white-space: pre-wrap;
+	background-color: rgb(245, 245, 245);
+	max-height: 600px;
+	margin-bottom: 0px;
+}

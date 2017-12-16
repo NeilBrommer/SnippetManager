@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="A new tab page">
+	<meta name="author" content="Neil Brommer">
+	<link rel="icon" href="favicon.ico">
+
+	<title>Multi-Table Service</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Custom styles -->
+	<link href="css/multiTable.css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div id="wrapper" class="container">
+		<nav class="navbar rounded navbar-expand-md navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">Snippets</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+			 aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a id="langLink" class="nav-link active" href="#">Languages</a>
+					</li>
+					<li>
+						<a id="snippetLink" class="nav-link" href="#">Snippets</a>
+					</li>
+					<li>
+						<a id="resourceLink" class="nav-link" href="#">Resources</a>
+					</li>
+					<li>
+						<a class="nav-link" href="documentation.html">API</a>
+					</li>
+				</ul>
+				<form class="form-inline mt-2 mt-md-0">
+					<button class="btn btn-primary ml-sm-2" type="button" data-toggle="modal" data-target="#addModal">Add</button>
+				</form>
+			</div>
+		</nav>
+
+		<div id="successAlert" class="alert alert-success"></div>
+
+		<div id="mainList">
+
+		</div>
+
+	</div>
+
+	<div id="addModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Add Item</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-tabs" id="tabContent">
+						<li class="nav-item">
+							<a id="addLangTab" class="nav-link active" href="#addLang" data-toggle="tab">Language</a>
+						</li>
+						<li class="nav-item">
+							<a id="addSnippetTab" class="nav-link" href="#addSnippet" data-toggle="tab">Snippet</a>
+						</li>
+						<li class="nav-item">
+							<a id="addResourceTab" class="nav-link" href="#addResource" data-toggle="tab">Resource</a>
+						</li>
+					</ul>
+
+					<div class="tab-content">
+						<div id="addLang" class="addSection tab-pane fade show active">
+							<form id="formAddLang">
+								<div class="form-group">
+									<label for="txtLangName">Name</label>
+									<input id="txtLangName" type="text" class="form-control addField" required>
+								</div>
+								<div class="form-group">
+									<label for="selectLangLangs">Languages</label>
+									<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+									<select id="selectLangLangs" class="custom-select langSelect" multiple size="9"></select>
+									<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+								</div>
+								<div class="form-group">
+									<label for="txtLangDesc">Description</label>
+									<textarea id="txtLangDesc" class="form-control addField"></textarea>
+								</div>
+							</form>
+						</div>
+						<div id="addSnippet" class="addSection tab-pane fade">
+							<form id="formAddSnippet">
+								<div class="form-group">
+									<label for="txtSnippetName">Name</label>
+									<input id="txtSnippetName" type="text" class="form-control addField" required>
+								</div>
+								<div class="form-group">
+									<label for="selectSnippetLangs">Languages</label>
+									<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+									<select id="selectSnippetLangs" class="custom-select langSelect" multiple size="9"></select>
+									<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+								</div>
+								<div class="form-group">
+									<label for="txtSnippetDesc">Description</label>
+									<textarea id="txtSnippetDesc" class="form-control addField"></textarea>
+								</div>
+								<div class="form-group">
+									<label for="txtSnippetBody">Snippet</label>
+									<textarea id="txtSnippetBody" class="form-control addField snippetBody" rows="10" wrap="off"></textarea>
+								</div>
+							</form>
+						</div>
+						<div id="addResource" class="addSection tab-pane fade">
+							<form id="formAddResource">
+								<div class="form-group">
+									<label for="txtResourceName">Name</label>
+									<input id="txtResourceName" type="text" class="form-control addField" required>
+								</div>
+								<div class="form-group">
+									<label for="selectResourceLangs">Languages</label>
+									<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+									<select id="selectResourceLangs" class="custom-select langSelect" multiple size="9"></select>
+									<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+								</div>
+								<div class="form-group">
+									<label for="txtResourceDesc">Description</label>
+									<textarea id="txtResourceDesc" class="form-control addField"></textarea>
+								</div>
+								<div class="form-group">
+									<label for="txtResourceLink">Link</label>
+									<input id="txtResourceLink" type="url" class="form-control addField">
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="btnAddItem" type="button" class="btn btn-primary">Add</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="editLangModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Language</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="formEditLang">
+						<input id="editLangID" type="hidden">
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editLangNameChk" class="custom-control-input editChk" data-for="#txtEditLangName">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Name</span>
+							</label>
+							<input id="txtEditLangName" type="text" class="form-control editField" disabled>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editLangLangsChk" class="custom-control-input editChk" data-for="#selectEditLangLangs">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Languages</span>
+							</label>
+							<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+							<select id="selectEditLangLangs" class="custom-select editField langSelect" multiple size="9" disabled></select>
+							<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editLangDescChk" class="custom-control-input editChk" data-for="#txtEditLangDesc">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Description</span>
+							</label>
+							<textarea id="txtEditLangDesc" class="form-control editField" disabled></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button id="btnSaveLang" type="button" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="editSnippetModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Snippet</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="formEditSnippet">
+						<input id="editSnippetID" type="hidden">
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editSnippetNameChk" class="custom-control-input editChk" data-for="#txtEditSnippetName">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Name</span>
+							</label>
+							<input id="txtEditSnippetName" type="text" class="form-control editField" disabled>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editSnippetLangsChk" class="custom-control-input editChk" data-for="#selectEditSnippetLangs">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Languages</span>
+							</label>
+							<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+							<select id="selectEditSnippetLangs" class="custom-select editField langSelect" multiple size="9" disabled></select>
+							<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editSnippetDescChk" class="custom-control-input editChk" data-for="#txtEditSnippetDesc">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Description</span>
+							</label>
+							<textarea id="txtEditSnippetDesc" class="form-control editField" disabled></textarea>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editSnippetBodyChk" class="custom-control-input editChk" data-for="#txtEditSnippetBody">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Snippet</span>
+							</label>
+							<textarea id="txtEditSnippetBody" class="form-control snippetBody editField" rows="10" wrap="off" disabled></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button id="btnSaveSnippet" type="button" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="editResourceModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Resource</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="formEditResource">
+						<input id="editResourceID" type="hidden">
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editResourceNameChk" class="custom-control-input editChk" data-for="#txtEditResourceName">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Name</span>
+							</label>
+							<input id="txtEditResourceName" type="text" class="form-control editField" disabled>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editResourceLangsChk" class="custom-control-input editChk" data-for="#selectEditResourceLangs">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Languages</span>
+							</label>
+							<button type="button" class="btn btn-info btn-sm float-right clearLangSelect">Clear</button>
+							<select id="selectEditResourceLangs" class="custom-select editField langSelect" multiple size="9" disabled></select>
+							<small class="form-text text-muted">Hold Ctrl to select multiple</small>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editResourceDescChk" class="custom-control-input editChk" data-for="#txtEditResourceDesc">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Description</span>
+							</label>
+							<textarea id="txtEditResourceDesc" class="form-control editField" disabled></textarea>
+						</div>
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" id="editResourceLinkChk" class="custom-control-input editChk" data-for="#txtEditResourceLink">
+								<span class="custom-control-indicator"></span>
+								<span class="custom-control-description">Link</span>
+							</label>
+							<input id="txtEditResourceLink" type="url" class="form-control editField" disabled>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button id="btnSaveResource" type="button" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="confirmDeleteModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirm Delete</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="deleteText">Are you sure?</p>
+				</div>
+				<div class="modal-footer">
+					<button id="btnConfirmDelete" type="button" class="btn btn-danger">Delete</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="errorModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-white bg-danger">
+					<h5 class="modal-title">Error</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="errorText">ERROR</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="lib/jquery/jquery-3.2.1.min.js"></script>
+	<script src="lib/popper/popper.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+
+</body>

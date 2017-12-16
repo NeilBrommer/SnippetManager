@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="A new tab page">
+	<meta name="author" content="Neil Brommer">
+	<link rel="icon" href="favicon.ico">
+
+	<title>Documentation - Multi-Table Service</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Custom styles -->
+	<link href="css/multiTable.css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div id="wrapper" class="container">
+		<nav class="navbar rounded navbar-expand-md navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">Snippets</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+			 aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<ul class="navbar-nav mr-auto">
+					<li>
+						<a class="nav-link" href="index.html">Web Client</a>
+					</li>
+					<li>
+						<a class="nav-link active" href="documentation.html">API</a>
+					</li>
+				</ul>
+				<form class="form-inline mt-2 mt-md-0">
+				</form>
+			</div>
+		</nav>
+
+		<h1>About</h1>
+		<p>
+			This app keeps a set of code snippets and programming resources categorized by language/library.
+			Each snippet or resource can be associated with multiple languages and vice versa.
+		</p>
+
+		<p>Features I plan to add to the backend:</p>
+		<ul>
+			<li>A login system</li>
+			<li>Add a column for snippets to indicate the language the snippet is written in</li>
+			<li>Search</li>
+		</ul>
+
+		<p>Features I plan to add to the web client:</p>
+		<ul>
+			<li>Syntax highlighting via <a href="http://prismjs.com/" target="_blamk">Prism</a></li>
+			<li>When a single language is selected, show all related snippets and resources</li>
+			<li>Deep linking</li>
+		</ul>
+
+		<hr>
+
+		<h1>Tables</h1>
+		<p>There are three main tables:</p>
+		<ul>
+			<li>language</li>
+			<li>snippet</li>
+			<li>resource</li>
+		</ul>
+
+		<p>And three tables used to link these tables together:</p>
+		<ul>
+			<li>langLang</li>
+			<li>langSnippet</li>
+			<li>langResource</li>
+		</ul>
+
+		<img id="tablesImg" src="tables.png" class="img-fluid rounded my-3 p-2 border">
+
+		<p>Each of the three main tables has a corresponding API endpoint  (off of the base URL webdev.neilbrommer.com/multiTable/):</p>
+		<ul>
+			<li>lang.php</li>
+			<li>snippet.php</li>
+			<li>resource.php</li>
+		</ul>
+
+		<hr>
+
+		<h1>API</h1>
+		<p>
+			Each of the endpoints is off of the base URL of <u>https://webdev.neilbrommer.com/multiTable/</u>.
+			SSL is required.
+		</p>
+		<p>Arguments that are <u>underlined</u> are optional.</p>
+
+		<h3 class="mt-5">lang.php</h3>
+		<p>For managing the list of languages.</p>
+
+		<div class="row border mb-4 rounded">
+			<form id="languageForm" class="py-3 col-md-4">
+				<p>webdev.neilbrommer.com<wbr>/multiTable<wbr>/lang.php</p>
+				<div class="form-group">
+					<select id="languageType" class="custom-select">
+						<option value="GET" selected>GET</option>
+						<option value="POST">POST</option>
+						<option value="PUT">PUT</option>
+						<option value="DELETE">DELETE</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="languageLangID">langID</label>
+					<input id="languageLangID" type="number" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="languageLangName">langName</label>
+					<input id="languageLangName" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="languageLangDesc">langDescription</label>
+					<input id="languageLangDesc" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="languageAssocLang">associatedLang</label>
+					<input id="languageAssocLang" type="number" class="form-control">
+				</div>
+				<button id="languageSubmit" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+			<pre class="col-md-8 p-1 resultsContainer"><code id="languageResults">Results will appear here</code></pre>
+		</div>
+
+		<dl>
+			<dt>GET</dt>
+			<dd>
+				<p>
+				Each of these returns a JSON object with <code>langID</code>, <code>langName</code>, <code>langDescription</code>,
+				a list of related <code>languages</code>, a list of <code>snippets</code>, and a list of <code>resources</code>.
+				</p>
+				<ul>
+					<li>
+						No arguments: returns all language entries.
+					</li>
+					<li>
+						<code>langID</code> (number): returns the specified language.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>POST</dt>
+			<p>Returns the <code>langID</code> of the new entry.</p>
+			<dd>
+				<ul>
+					<li>
+						<code>langName</code> (string), <u><code>langDescription</code></u> (string), <u><code>associatedLang</code></u>
+						(number): Creates a new language with the specified information. <code>associatedLang</code> is the
+						<code>langID</code> of the language you want to link to the one being created. More languages can be linked later
+						via <code>PUT</code>.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>PUT</dt>
+			<p>Returns no data.</p>
+			<dd>
+				<ul>
+					<li>
+						<code>langID</code> (number), <u><code>langName</code></u> (string), <u><code>langDescription</code></u>
+						(string), <u><code>associatedLang</code></u> (number): Modifies any provided fields for the language
+						specified by the <code>langID</code>.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>DELETE</dt>
+			<p>Returns no data.</p>
+			<dd>
+				<ul>
+					<li>
+						<code>langID</code> (number): Deletes the specified language entry, including all connections to snippets,
+						resources, and other languages.
+					</li>
+					<li>
+						<code>langID</code> (number), <code>associatedLang</code> (number): Removes the connection between the two
+						specified languages.
+					</li>
+				</ul>
+			</dd>
+		</dl>
+
+		<h3 class="mt-5">snippet.php</h3>
+		<p>For managing the list of snippets.</p>
+
+		<div class="row border mb-4 rounded">
+			<form id="snippetForm" class="py-3 col-md-4">
+				<p class="wrapping">webdev.neilbrommer.com<wbr>/multiTable<wbr>/snippet.php</p>
+				<div class="form-group">
+					<select id="snippetType" class="custom-select">
+						<option value="GET" selected>GET</option>
+						<option value="POST">POST</option>
+						<option value="PUT">PUT</option>
+						<option value="DELETE">DELETE</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="snippetSnippetID">snippetID</label>
+					<input id="snippetSnippetID" type="number" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="snippetSnippetName">snippetName</label>
+					<input id="snippetSnippetName" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="snippetSnippetDesc">snippetDescription</label>
+					<input id="snippetSnippetDesc" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="snippetSnippetBody">snippet</label>
+					<textarea id="snippetSnippetBody" class="form-control"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="snippetLangID">langID</label>
+					<input id="snippetLangID" type="number" class="form-control">
+				</div>
+				<button id="snippetSubmit" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+			<pre class="col-md-8 p-1 resultsContainer"><code id="snippetResults">Results will appear here</code></pre>
+		</div>
+
+		<dl>
+			<dt>GET</dt>
+			<dd>
+				<p>
+					Each of these returns a JSON object with <code>snippetID</code>, <code>snippetName</code>,
+					<code>snippetDescription</code>, <code>snippet</code>, and a list of related <code>languages</code>.
+				</p>
+
+				<ul>
+					<li>
+						No arguments: Returns a list of all snippets.
+					</li>
+					<li>
+						<code>snippetID</code> (number): Returns the entry for the specified language.
+					</li>
+					<li>
+						<code>langID</code> (number): Returns a list of snippets related to the given language.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>POST</dt>
+			<dd>
+				<p>Returns the <code>snippetID</code> of the new snippet.</p>
+				<ul>
+					<li>
+						<code>snippetName</code> (string), <u><code>langID</code></u> (number),
+						<u><code>snippetDescription</code></u> (string), <u><code>snippet</code></u> (string):
+						Creates a new snippet with the given values.
+
+						Only one language can be associated with a snippet at creation. More can be added later via
+						<code>PUT</code>.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>PUT</dt>
+			<dd>
+				<p>Returns nothing</p>
+				<ul>
+					<li>
+						<code>snippetID</code> (number), <u><code>langID</code></u> (number),
+						<u><code>snippetName</code></u> (string), <u><code>snippetDescription</code></u> (string),
+						<u><code>snippet</code></u> (string): Modifies the specified information.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>DELETE</dt>
+			<dd>
+				<p>Returns nothing</p>
+				<ul>
+					<li>
+						<code>snippetID</code> (number): Deletes the entry for the specified snippet.
+					</li>
+					<li>
+						<code>snippetID</code> (number), <code>langID</code> (number): Removes the connection between
+						the specified snippet and language.
+					</li>
+				</ul>
+			</dd>
+		</dl>
+
+		<h3 class="mt-5">resource.php</h3>
+		<p>For managing the list of resources.</p>
+		<p>
+			The API for resource.php is nearly identical to the one for snippet.php with <code>resourceLink</code>
+			in place of <code>snippet</code>.
+		</p>
+
+		<div class="row border mb-4 rounded">
+			<form id="resourceForm" class="py-3 col-md-4">
+				<p class="wrapping">webdev.neilbrommer.com<wbr>/multiTable<wbr>/resource.php</p>
+				<div class="form-group">
+					<select id="resourceType" class="custom-select">
+						<option value="GET" selected>GET</option>
+						<option value="POST">POST</option>
+						<option value="PUT">PUT</option>
+						<option value="DELETE">DELETE</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="resourceResourceID">resourceID</label>
+					<input id="resourceResourceID" type="number" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="resourceResourceName">resourceName</label>
+					<input id="resourceResourceName" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="resourceResourceDesc">resourceDescription</label>
+					<input id="resourceResourceDesc" type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="resourceResourceLink">resourceLink</label>
+					<input id="resourceResourceLink" type="url" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="resourceLangID">langID</label>
+					<input id="resourceLangID" type="number" class="form-control">
+				</div>
+				<button id="resourceSubmit" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+			<pre class="col-md-8 p-1 resultsContainer"><code id="resourceResults">Results will appear here</code></pre>
+		</div>
+
+		<dl>
+			<dt>GET</dt>
+			<dd>
+				<p>
+					Returns JSON encoded resources with a <code>resourceID</code>, a <code>resourceName</code>, a
+					<code>resourceDescription</code>, a <code>resourceLink</code>, and a list of related
+					<code>languages</code>.
+				</p>
+				<ul>
+					<li>
+						No arguments: Returns a list of all resource entries.
+					</li>
+					<li>
+						<code>langID</code> (number): Returns a list of resources related to the specified language.
+					</li>
+					<li>
+						<code>resourceID</code> (number): Returns the specified resource entry.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>POST</dt>
+			<dd>
+				<p>
+					Returns the <code>resourceID</code> of the newly created resource.
+				</p>
+				<ul>
+					<li>
+						<code>resourceName</code> (string), <u><code>langID</code></u> (number),
+						<u><code>resourceDescription</code></u> (string), and <u><code>resourceLink</code></u> (string):
+						Creates a resource with the given information.
+
+						Only one language can be associated at creation. More can be added via <code>PUT</code>.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>PUT</dt>
+			<dd>
+				<p>Returns nothing.</p>
+				<ul>
+					<li>
+						<code>resourceID</code> (number), <u><code>resourceName</code></u> (string),
+						<u><code>langID</code></u> (number), <u><code>resourceDescription</code></u> (string), and
+						<u><code>resourceLink</code></u> (string): Modifies the specified data for the specified
+						resource.
+					</li>
+				</ul>
+			</dd>
+
+			<dt>DELETE</dt>
+			<dd>
+				<p>Returns nothing.</p>
+				<ul>
+					<li>
+						<code>resourceID</code> (number): Deletes the specified resource.
+					</li>
+					<li>
+						<code>resourceID</code> (number), <code>langID</code> (number): Removes the connection between
+						the specified resource and language.
+					</li>
+				</ul>
+			</dd>
+		</dl>
+
+	</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="lib/jquery/jquery-3.2.1.min.js"></script>
+	<script src="lib/popper/popper.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+	<!-- custom JavaScript -->
+	<script src="js/docs.js"></script>
+</body>
