@@ -3,16 +3,16 @@ var selectList = [];
 $(document).ready(function () {
 	loadLangs();
 
-	$("#langLink").click(function (evt) {
-		evt.preventDefault();
+	$("#langLink").click(function (e) {
+		e.preventDefault();
 		loadLangs();
 	});
-	$("#snippetLink").click(function (evt) {
-		evt.preventDefault();
+	$("#snippetLink").click(function (e) {
+		e.preventDefault();
 		loadSnippets();
 	});
-	$("#resourceLink").click(function (evt) {
-		evt.preventDefault();
+	$("#resourceLink").click(function (e) {
+		e.preventDefault();
 		loadResources();
 	});
 
@@ -50,8 +50,7 @@ function buildLangSelect() {
 function addSelectLangs(langList) {
 	var selectors = $(".langSelect");
 	selectors.empty();
-	for (var i = 0; i < langList.length; i++) {
-		var cur = langList[i];
+	for (let cur of langList) {
 		$("<option>").val(cur.langID).text(cur.langName).appendTo(selectors);
 	}
 }
@@ -205,15 +204,8 @@ function loadResources() {
 }
 
 function addResourceList(resourceList) {
-	var mainList = $("#mainList");
-	for (var i = 0; i < resourceList.length; i++) {
-		$("<div>").attr({ "id": "resource-" + resourceList[i].resourceID }).appendTo(mainList);
-		$.ajax({
-			url: "resource.php?resourceID=" + resourceList[i].resourceID,
-			type: "GET",
-			success: addResource,
-			error: displayError
-		});
+	for (let resource of resourceList) {
+		addResource(resource);
 	}
 }
 
@@ -223,6 +215,7 @@ function addResource(resource) {
 		"href": resource.resourceLink,
 		"target": "_blank"
 	}).text(resource.resourceLink);
+	$("<div>").attr("id", "resource-" + resource.resourceID).appendTo($("#mainList"));
 	buildCard("resource", resource.resourceID, resource.resourceName, resource.languages, resource.resourceDescription, link);
 }
 
@@ -255,19 +248,13 @@ function loadSnippets() {
 
 function addSnippets(snippetList) {
 	var mainList = $("#mainList");
-	for (var i = 0; i < snippetList.length; i++) {
-		// add thesse so that everything is loaded in order regardless of async
-		$("<div>").attr({ "id": "snippet-" + snippetList[i].snippetID }).appendTo(mainList);
-		$.ajax({
-			url: "snippet.php?snippetID=" + snippetList[i].snippetID,
-			type: "GET",
-			success: function (result) { addSnippet(result) },
-			error: function (result) { displayError(result) }
-		});
+	for (let snippet of snippetList) {
+		addSnippet(snippet);
 	}
 }
 
 function addSnippet(snippet) {
+	$("<div>").attr({ "id": "snippet-" + snippet.snippetID }).appendTo(mainList);
 	var code = $('<pre><code>').attr("id", "snippet-" + snippet.snippetID + "-body").text(snippet.snippet);
 	buildCard("snippet", snippet.snippetID, snippet.snippetName, snippet.languages, snippet.snippetDescription, code);
 }
@@ -476,8 +463,7 @@ function saveLang() {
 
 	var langID = $("#editLangID").val();
 	var langName = $("#txtEditLangName").val().trim();
-	var data = {};
-	data['langID'] = langID;
+	var data = { langID: langID };
 
 	if (changeName && langName == "") {
 		displayError({responseText: "Name cannot be empty"});
@@ -506,35 +492,10 @@ function saveLang() {
 		});
 
 		var langsToAdd = inANotInB(newLangsList, curLangsList);
+		manageAssocLang("lang", "PUT", langID, langsToAdd);
+
 		var langsToDelete = inANotInB(curLangsList, newLangsList);
-
-		addLangsLang(langID, langName, langsToAdd, langsToDelete != 0);
-		deleteLangsLang(langID, langName, langsToDelete);
-	}
-}
-
-function addLangsLang(langID, langName, langList, forceUpdate) {
-	for (var i = 0; i < langList.length; i++) {
-		$.ajax({
-			url: "lang.php",
-			type: "PUT",
-			data: {langID: langID, associatedLang: langList[i]},
-			error: displayError
-		});
-	}
-
-	if (forceUpdate || langList.length != 0)
-		successAlert("Successfully saved language: " + langName, "lang")
-}
-
-function deleteLangsLang(langID, langName, langList) {
-	for (var i = 0; i < langList.length; i++) {
-		$.ajax({
-			url: "lang.php",
-			type: "DELETE",
-			data: {langID: langID, associatedLang: langList[i]},
-			error: displayError
-		});
+		manageAssocLang("lang", "DELETE", langID, langsToDelete);
 	}
 }
 
@@ -549,8 +510,7 @@ function saveSnippet() {
 
 	var snippetID = $("#editSnippetID").val();
 	var snippetName = $("#txtEditSnippetName").val().trim();
-	var data = {};
-	data['snippetID'] = snippetID;
+	var data = { snippetID: snippetID };
 
 	if (changeName && snippetName == "") {
 		displayError({responseText: "Name cannot be empty"});
@@ -580,32 +540,10 @@ function saveSnippet() {
 		});
 
 		var langsToAdd = inANotInB(newLangsList, curLangsList);
-		addLangsSnippet(snippetID, langsToAdd);
+		manageAssocLang("snippet", "PUT", snippetID, langsToAdd);
 
 		var langsToDelete = inANotInB(curLangsList, newLangsList);
-		deleteLangsSnippet(snippetID, langsToDelete);
-	}
-}
-
-function addLangsSnippet(snippetID, langList) {
-	for (var i = 0; i < langList.length; i++) {
-		$.ajax({
-			url: "snippet.php",
-			type: "PUT",
-			data: {snippetID: snippetID, langID: langList[i]},
-			error: displayError
-		});
-	}
-}
-
-function deleteLangsSnippet(snippetID, langList) {
-	for (var i = 0; i < langList.length; i++) {
-		$.ajax({
-			url: "snippet.php",
-			type: "DELETE",
-			data: {snippetID: snippetID, langID: langList[i]},
-			error: displayError
-		});
+		manageAssocLang("snippet", "DELETE", snippetID, langsToDelete);
 	}
 }
 
@@ -620,8 +558,7 @@ function saveResource() {
 
 	var resourceID = $("#editResourceID").val();
 	var resourceName = $("#txtEditResourceName").val().trim();
-	var data = {};
-	data['resourceID'] = resourceID;
+	var data = { resourceID: resourceID };
 
 	if (changeName && resourceName == "") {
 		displayError({responseText: "Name cannot be empty"});
@@ -650,30 +587,21 @@ function saveResource() {
 		});
 
 		var langsToAdd = inANotInB(newLangsList, curLangsList);
-		addLangsResource(resourceID, langsToAdd);
+		manageAssocLang("resource", "PUT", resourceID, langsToAdd);
 
 		var langsToDelete = inANotInB(curLangsList, newLangsList);
-		deleteLangsResource(resourceID, langsToDelete);
+		manageAssocLang("resource", "DELETE", resourceID, langsToDelete);
 	}
 }
 
-function addLangsResource(resourceID, langList) {
-	for (var i = 0; i < langList.length; i++) {
+function manageAssocLang(type, action, id, langList) {
+	for (let item of langList) {
+		var data = { langID: item };
+		data[type + "ID"] = id;
 		$.ajax({
-			url: "resource.php",
-			type: "PUT",
-			data: {resourceID: resourceID, langID: langList[i]},
-			error: displayError
-		});
-	}
-}
-
-function deleteLangsResource(resourceID, langList) {
-	for (var i = 0; i < langList.length; i++) {
-		$.ajax({
-			url: "resource.php",
-			type: "DELETE",
-			data: {resourceID: resourceID, langID: langList[i]},
+			url: type + ".php",
+			type: action,
+			data: data,
 			error: displayError
 		});
 	}
@@ -731,9 +659,9 @@ function displayError(error, str) {
 
 function inANotInB(a, b) {
 	var list = [];
-	for (var i = 0; i < a.length; i++) {
-		if (b.indexOf(a[i]) == -1)
-			list.push(a[i]);
+	for (let item of a) {
+		if (b.indexOf(item) == -1)
+			list.push(item);
 	}
 	return list;
 }

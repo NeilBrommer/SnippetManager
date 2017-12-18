@@ -42,7 +42,7 @@
 					</li>
 				</ul>
 				<form class="form-inline mt-2 mt-md-0">
-					<button class="btn btn-primary ml-sm-2" type="button" data-toggle="modal" data-target="#addModal">Add</button>
+					<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal">Add</button>
 				</form>
 			</div>
 		</nav>
@@ -82,7 +82,7 @@
 							<form id="formAddLang">
 								<div class="form-group">
 									<label for="txtLangName">Name</label>
-									<input id="txtLangName" type="text" class="form-control addField" required>
+									<input id="txtLangName" type="text" class="form-control addField addLangField" required>
 								</div>
 								<div class="form-group">
 									<label for="selectLangLangs">Languages</label>
@@ -92,7 +92,7 @@
 								</div>
 								<div class="form-group">
 									<label for="txtLangDesc">Description</label>
-									<textarea id="txtLangDesc" class="form-control addField"></textarea>
+									<textarea id="txtLangDesc" class="form-control addField addLangField"></textarea>
 								</div>
 							</form>
 						</div>
@@ -100,7 +100,7 @@
 							<form id="formAddSnippet">
 								<div class="form-group">
 									<label for="txtSnippetName">Name</label>
-									<input id="txtSnippetName" type="text" class="form-control addField" required>
+									<input id="txtSnippetName" type="text" class="form-control addField addSnippetField" required>
 								</div>
 								<div class="form-group">
 									<label for="selectSnippetLangs">Languages</label>
@@ -110,11 +110,11 @@
 								</div>
 								<div class="form-group">
 									<label for="txtSnippetDesc">Description</label>
-									<textarea id="txtSnippetDesc" class="form-control addField"></textarea>
+									<textarea id="txtSnippetDesc" class="form-control addField addSnippetField"></textarea>
 								</div>
 								<div class="form-group">
 									<label for="txtSnippetBody">Snippet</label>
-									<textarea id="txtSnippetBody" class="form-control addField snippetBody" rows="10" wrap="off"></textarea>
+									<textarea id="txtSnippetBody" class="form-control addField addSnippetField snippetBody" rows="10" wrap="off"></textarea>
 								</div>
 							</form>
 						</div>
@@ -122,7 +122,7 @@
 							<form id="formAddResource">
 								<div class="form-group">
 									<label for="txtResourceName">Name</label>
-									<input id="txtResourceName" type="text" class="form-control addField" required>
+									<input id="txtResourceName" type="text" class="form-control addField addResourceField" required>
 								</div>
 								<div class="form-group">
 									<label for="selectResourceLangs">Languages</label>
@@ -132,11 +132,11 @@
 								</div>
 								<div class="form-group">
 									<label for="txtResourceDesc">Description</label>
-									<textarea id="txtResourceDesc" class="form-control addField"></textarea>
+									<textarea id="txtResourceDesc" class="form-control addField addResourceField"></textarea>
 								</div>
 								<div class="form-group">
 									<label for="txtResourceLink">Link</label>
-									<input id="txtResourceLink" type="url" class="form-control addField">
+									<input id="txtResourceLink" type="url" class="form-control addField addResourceField">
 								</div>
 							</form>
 						</div>
