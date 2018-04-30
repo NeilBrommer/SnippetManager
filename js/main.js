@@ -7,7 +7,9 @@ $(document).ready(function () {
 		$("#addLangTab").tab("show");
 		$(".addField").val("");
 		buildLangSelect();
-	}).on("shown.bs.modal", function (e) { $("#txtLangName").focus(); });
+	}).on("shown.bs.modal", function (e) {
+		$("#txtLangName").focus();
+	});
 
 	$("#btnAddItem").click(addNewItem);
 	$(".clearLangSelect").click(function () { $(".langSelect").val([]); });
@@ -26,14 +28,14 @@ function buildLangSelect() {
 function addSelectLangs(langList) {
 	var selectors = $(".langSelect");
 	selectors.empty();
-	for (let cur of langList) {
+	langList.forEach(function (cur) {
 		$("<option>").val(cur.langID).text(cur.langName).appendTo(selectors);
-	}
+	});
 }
 
 function checkBoxChange() {
-	var me = $(this);
-	$(me.data("for")).attr("disabled", !me.prop("checked"));
+	var chk = $(this);
+	$(chk.data("for")).attr("disabled", !chk.prop("checked"));
 }
 
 function addNewItem() {
@@ -104,7 +106,7 @@ function addNewItem() {
 function successAlert(text, type) {
 	var alert = $("#successAlert");
 
-	if (alert.attr("display") == "none") {
+	if (alert.attr("display") != "none") {
 		alert.slideUp();
 	}
 
@@ -145,24 +147,27 @@ function buildCard(type, id, name, languageList, DescriptionText, body) {
 
 	var langString = [];
 	if (languageList != null && languageList.length > 0) {
-		for (var i = 0; i < languageList.length; i++) {
-			var cur = languageList[i];
-			langString[i] = cur.langID;
+		languageList.forEach(function (cur) {
+			langString.push(cur.langID);
 			$("<a>").attr({
 				"class": "card-link",
 				"href": "#",
 				"onClick": "handleLangClicked(event, " + cur.langID + ")"
 			}).text(cur.langName).appendTo(langList);
-		}
+		});
 		card.attr("data-langs", JSON.stringify(langString));
 	} else {
 		card.attr("data-langs", "[]");
 	}
 
-	$('<p>').attr("id", type + "-" + id + "-description").addClass("card-text").text(DescriptionText).appendTo(cardBody);
-	cardBody.append(body);
+	$('<p>').attr("id", type + "-" + id + "-description")
+		.addClass("card-text")
+		.text(DescriptionText)
+		.appendTo(cardBody);
 
+	cardBody.append(body);
 	card.append(cardBody);
+
 	card.appendTo($("#" + type + "-" + id));
 }
 
@@ -183,7 +188,7 @@ function editClicked() {
 }
 
 function manageAssocLang(type, action, id, langList) {
-	for (let item of langList) {
+	langList.forEach(function (item) {
 		var data = { langID: item };
 		data[type + "ID"] = id;
 		$.ajax({
@@ -192,7 +197,7 @@ function manageAssocLang(type, action, id, langList) {
 			data: data,
 			error: displayError
 		});
-	}
+	});
 }
 
 function deleteClicked() {
@@ -224,16 +229,18 @@ function deselectNav() {
 }
 
 function displayError(error, str) {
-	console.log(error);
+	console.error(error);
 	$("#errorText").text(error.responseText);
 	$("#errorModal").modal('show');
 }
 
 function inANotInB(a, b) {
 	var list = [];
-	for (let item of a) {
+
+	a.forEach(function (item) {
 		if (b.indexOf(item) == -1)
 			list.push(item);
-	}
+	});
+
 	return list;
 }

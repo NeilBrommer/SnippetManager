@@ -17,14 +17,14 @@ $(document).ready(function () {
 
 function addLangLangs(langID, langName, langIDList) {
 	if (langIDList != null) {
-		for (var i = 0; i < langIDList.length; i++) {
+		langIDList.forEach(function (item) {
 			$.ajax({
 				url: "lang.php",
 				type: "PUT",
-				data: {langID: langID, associatedLang: langIDList[i]},
+				data: {langID: langID, associatedLang: item},
 				error: displayError
 			});
-		}
+		});
 	}
 
 	successAlert("Successfully Added language: " + langName, "lang");
@@ -46,15 +46,15 @@ function loadLangs() {
 
 function addLangs(langList) {
 	var mainList = $("#mainList");
-	for (var i = 0; i < langList.length; i++) {
-		$("<div>").attr({ "id": "lang-" + langList[i].langID }).appendTo(mainList);
+	langList.forEach(function (item) {
+		$("<div>").attr({ "id": "lang-" + item.langID }).appendTo(mainList);
 		$.ajax({
-			url: "lang.php?langID=" + langList[i].langID,
+			url: "lang.php?langID=" + item.langID,
 			type: "GET",
 			success: function (result) { addLang(result) },
 			error: function (result) { displayError(result) }
 		});
-	}
+	});
 }
 
 function addLang(lang) {
